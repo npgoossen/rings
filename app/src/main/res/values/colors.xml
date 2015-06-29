@@ -1,0 +1,11 @@
+<resources>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="mainBG">#fffafa</color>
+    <color name="gameOrange">#ff8e30</color>
+    <color name="gameRed">#ff3030</color>
+    <color name="gameBlue">#2d7fbe</color>
+    <color name="gameGreen">#009400</color>
+    <color name="startGreen">#00cc00</color>
+
+</resources>
