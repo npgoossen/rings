@@ -68,4 +68,9 @@ public class LoopSegment {
 
         return angle;
     }
+
+    public String toString(){
+        return String.valueOf(color) + "," + String.valueOf(startAngle) + "," +
+                String.valueOf(sweepAngle);
+    }
 }

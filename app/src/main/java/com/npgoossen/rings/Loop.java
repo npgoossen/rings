@@ -71,9 +71,16 @@ public class Loop {
     }
 
     public void clearLoop(){
-        for(int i = 0; i < segments.size(); i++) {
-            segments.remove(i);
+        segments.clear();
+    }
+
+    public String toString(){
+        String tmp = new String();
+
+        for(LoopSegment seg : segments){
+            tmp += seg.toString() + "---";
         }
+        return tmp;
     }
 
 }

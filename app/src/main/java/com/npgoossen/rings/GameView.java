@@ -31,9 +31,9 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
     public static List<Integer> loopColors = new ArrayList<>();
     private static Loop mainLoop;
-    private static int loopSpeed = 4;
+    private static int loopSpeed = 9;
 
-    private static float sensorMultiplier = 1.0f;
+    private static float sensorMultiplier = 1.25f;
     private static SensorManager gameSensorManager;
     private static Sensor motionSensor;
 
@@ -51,6 +51,8 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
     private int gameOverColor;
 
+    private static final int originalLoopSpeed = 9;
+    private static final float originalSensorMultiplier = 1.25f;
 
     public GameView(Context context){
         super(context);
@@ -83,20 +85,21 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         mainLoop = new Loop(this.paint, this.arcWedge,
                 this.radius, this.innerRadius, this.bgColor);
 
-        this.addColorsToLoop();
-
-        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
-        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
-
-        scoreChanged = false;
-        gameOverColor = loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size()));
-
-        this.curBall = new Ball((float)(radius/5.0), arcWedge.centerX(), arcWedge.centerY(),
-                this.paint, getRandBallColor(),
-                windowHeight, windowWidth);
-
-        gameSensorManager.registerListener(this, motionSensor,
-                SensorManager.SENSOR_DELAY_GAME);
+        this.startGame();
+////        this.initLoopColors();
+//
+//        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
+//        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
+//
+//        scoreChanged = false;
+//        gameOverColor = loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size()));
+//
+//        this.curBall = new Ball((float)(radius/5.0), arcWedge.centerX(), arcWedge.centerY(),
+//                this.paint, getRandBallColor(),
+//                windowHeight, windowWidth);
+//
+//        gameSensorManager.registerListener(this, motionSensor,
+//                SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -110,7 +113,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             this.checkCollision();
 
             paint.setColor(loopColors.get(0));
-            paint.setTextSize(50.0f);
+            paint.setTextSize(70.0f);
             paint.setFakeBoldText(true);
             canvas.drawText(String.valueOf(score), this.windowWidth - 100, 100, this.paint);
             this.updateLoop();
@@ -119,7 +122,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             mainLoop.draw(canvas);
             this.curBall.draw(canvas);
 
-            canvas.drawARGB(180, 255, 250, 250);
+            canvas.drawARGB(200, 255, 250, 250);
 
             paint.setColor(this.gameOverColor);
             paint.setTextSize(100.0f);
@@ -132,7 +135,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                     this.arcWedge.centerY(), paint);
 
             paint.setTextSize(100.0f);
-            canvas.drawText("play again", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
+            canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
                     paint);
         }
 
@@ -143,7 +146,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         if(!gameOver){
             return true;
         } else {
-            resetGame();
+            this.resetGame();
             return true;
         }
 
@@ -180,7 +183,6 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                 finalScore = score;
             }
             else{
-                score = 0;
                 gameOver = true;
             }
         }
@@ -213,14 +215,17 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
     private void updateLoop(){
         if(score % 5 == 0 && scoreChanged ) {
-            mainLoop.addSegment(getRandLoopColor());
-            loopSpeed += 1;
-            sensorMultiplier += 0.1f;
+            while(true){
+                if(mainLoop.addSegment(getRandLoopColor()))
+                    break;
+            }
+            loopSpeed += 4;
+            sensorMultiplier += 0.45;
             scoreChanged = false;
         }
     }
 
-    private void addColorsToLoop(){
+    private void initLoopColors(){
         loopColors.add(res.getColor(R.color.gameGreen));
         loopColors.add(res.getColor(R.color.gameOrange));
         loopColors.add(res.getColor(R.color.gameRed));
@@ -234,15 +239,41 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         mainLoop.clearLoop();
         int tmp = 0;
 
-        while(tmp != 2) {
-            if(mainLoop.addSegment(getRandLoopColor()))
+        while(tmp < 2) {
+            if (mainLoop.addSegment(getRandLoopColor())) {
                 tmp++;
+            }
         }
-
         this.curBall.reset();
         score = 0;
         finalScore = 0;
         gameOver = false;
         scoreChanged = false;
+
+        sensorMultiplier = originalSensorMultiplier;
+        loopSpeed = originalLoopSpeed;
+    }
+
+    private void startGame(){
+        this.initLoopColors();
+
+        scoreChanged = false;
+
+        int tmp = 0;
+        while(tmp < 2){
+            if(mainLoop.addSegment(getRandLoopColor()))
+                tmp++;
+        }
+
+        System.out.println(mainLoop.toString());
+
+        this.curBall = new Ball((float)(radius/5.0), arcWedge.centerX(), arcWedge.centerY(),
+                this.paint, getRandBallColor(),
+                windowHeight, windowWidth);
+
+        gameOverColor = loopColors.get(randomGenerator.nextInt(loopColors.size()));
+
+        gameSensorManager.registerListener(this, motionSensor,
+                SensorManager.SENSOR_DELAY_GAME);
     }
 }
