@@ -34,9 +34,13 @@ public class LoopSegment {
     public boolean containsPoint(float x, float y){
         float angle = this.getAngle(x, y);
 
-        System.out.println(angle);
-
-        return ((angle > this.startAngle) && (angle < (this.startAngle + this.sweepAngle)));
+        if(this.startAngle + this.sweepAngle <= 360){
+            return ((angle > this.startAngle) && (angle < (this.startAngle + this.sweepAngle)));
+        } else if((angle > this.startAngle) || (angle < (this.startAngle + this.sweepAngle) - 360)){
+            return true;
+        } else{
+            return false;
+        }
     }
 
     private float getAngle(float x, float y){
@@ -49,7 +53,7 @@ public class LoopSegment {
         } else if(y < this.container.centerY() && x < this.container.centerX()) {
             angle = (float)(180.0 + (180.0 / Math.PI) * Math.atan((this.container.centerY() - y)/(this.container.centerX() - x)));
         } else if(y < this.container.centerY() && x > this.container.centerX()) {
-            angle = (float)(270.0 + (180.0 / Math.PI) * Math.atan((x - this.container.centerX())/(y - this.container.centerY())));
+            angle = (float)(270.0 + (180.0 / Math.PI) * Math.atan((x - this.container.centerX())/(this.container.centerY() - y)));
         } else if(y == this.container.centerY() && x > this.container.centerX()){
             angle = 0.0f;
         } else if(y == this.container.centerY() && x < this.container.centerX()){

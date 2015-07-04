@@ -1,6 +1,5 @@
 package com.npgoossen.rings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -10,9 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +17,8 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainMenuView extends View implements View.OnTouchListener {
-
-    private static final String TAG = "MainMenuView";
 
     Paint paint = new Paint();
 

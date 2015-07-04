@@ -30,6 +30,13 @@
             android:label="@string/title_activity_game"
             android:theme="@style/FullscreenTheme" >
         </activity>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1615335458747056"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
+
     </application>
+
+
 
 </manifest>

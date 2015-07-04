@@ -52,7 +52,6 @@ public class Ball {
     public void reset(){
         this.positionY = this.centerY;
         this.positionX = this.centerX;
-//        this.color = color;
-        this.color = GameView.getRandColor();
+        this.color = GameView.getRandBallColor();
     }
 }

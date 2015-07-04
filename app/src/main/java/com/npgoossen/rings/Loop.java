@@ -6,7 +6,6 @@ import android.graphics.RectF;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Loop {
 
@@ -69,6 +68,12 @@ public class Loop {
         for(LoopSegment seg : this.segments){
             seg.setPosition((seg.startAngle + angle) % 360.0f, (int)seg.sweepAngle);
         }
-
     }
+
+    public void clearLoop(){
+        for(int i = 0; i < segments.size(); i++) {
+            segments.remove(i);
+        }
+    }
+
 }

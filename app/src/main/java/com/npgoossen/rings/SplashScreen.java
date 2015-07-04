@@ -4,7 +4,6 @@ import com.npgoossen.rings.util.SystemUiHider;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -20,7 +19,7 @@ public class SplashScreen extends Activity {
 
     /** Duration of Wait **/
 
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
