@@ -7,9 +7,17 @@
     <color name="gamePink">#cd2684</color>
     <color name="gameYellow">#FFb830</color>
     <color name="gamePurple">#8226aa</color>
+    <color name="gameGrey">#808080</color>
+    <color name="gameBlack">#000000</color>
+    <color name="gameBrown">#4f2f0f</color>
+    <color name="gameTeal">#06af80</color>
+    <color name="gameBrightGreen">#a6f009</color>
 
     <color name="startGreen">#00cc00</color>
     <color name="black_overlay">#66000000</color>
     <color name="mainBG">#fffafa</color>
 
+    <color name="websiteBlue">#307d87</color>
+    <color name="websiteOrange">#dd934c</color>
+    <color name="websiteGreen">#3cb13e</color>
 </resources>

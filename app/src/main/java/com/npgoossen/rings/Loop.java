@@ -44,11 +44,20 @@ public class Loop {
         this.segments.add(new LoopSegment(this.paint, color, sweepAngle,
                 0, this.container));
 
-        for(LoopSegment seg: this.segments){
-            seg.setPosition(curPosition, sweepAngle);
-            curPosition += sweepAngle;
-        }
+        if(segments.size() != 7) {
+            for (LoopSegment seg : this.segments) {
+                seg.setPosition(curPosition, sweepAngle);
+                curPosition += sweepAngle;
+            }
+        } else {
+            int i;
+            for (i = 0; i < segments.size() - 1; i++) {
+                segments.get(i).setPosition(curPosition, sweepAngle);
+                curPosition += sweepAngle;
+            }
 
+            segments.get(segments.size() - 1).setPosition(curPosition, 360 - curPosition);
+        }
         this.size++;
 
         return true;
@@ -75,7 +84,7 @@ public class Loop {
     }
 
     public String toString(){
-        String tmp = new String();
+        String tmp = "";
 
         for(LoopSegment seg : segments){
             tmp += seg.toString() + "---";

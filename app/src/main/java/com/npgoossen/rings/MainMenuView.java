@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -31,11 +32,15 @@ public class MainMenuView extends View implements View.OnTouchListener {
 
     private List<Integer> loopColors = new ArrayList<>();
     private Bitmap startEmblem = BitmapFactory.decodeResource(res, R.drawable.start);
+    private Bitmap instructionImg = BitmapFactory.decodeResource(res, R.drawable.instructions);
 
     private int bgColor = res.getColor(R.color.mainBG);
 
     private float radius;
     private float innerRadius;
+
+    private boolean mainMenu;
+    private boolean instructionMenu;
 
     public MainMenuView(Context context){
         super(context);
@@ -78,27 +83,64 @@ public class MainMenuView extends View implements View.OnTouchListener {
                 (int)(this.windowWidth * 4.0/5.0),
                 (int)(this.windowWidth * 4.0/5.0),
                 true);
+        this.instructionImg = Bitmap.createScaledBitmap(this.instructionImg,
+                this.windowWidth,
+                this.windowHeight,
+                true);
+
+        this.mainMenu = true;
+        this.instructionMenu = false;
     }
 
     @Override
     protected void onDraw(Canvas canvas){
-
-        canvas.drawColor(this.bgColor);
-        this.mainLoop.draw(canvas);
-        canvas.drawBitmap(this.startEmblem, (float)(windowWidth / 2.0 - innerRadius),
-                (float)(windowHeight / 2.0 - innerRadius),
-                this.paint);
-        this.mainLoop.move(6);
-
+        if(mainMenu){
+            this.drawMainMenu(canvas);
+        } else if(instructionMenu) {
+            this.drawInstructionMenu(canvas);
+        }
         invalidate();
     }
 
     public boolean onTouch(View view, MotionEvent event){
-        if (this.mainLoop.container.contains(event.getX(), event.getY())){
-            Intent mainIntent = new Intent(getContext(), GameActivity.class);
-            getContext().startActivity(mainIntent);
+        if (mainMenu){
+            if(this.mainLoop.container.contains(event.getX(), event.getY())) {
+                Intent mainIntent = new Intent(getContext(), GameActivity.class);
+                getContext().startActivity(mainIntent);
+            } else if((event.getX() > this.windowWidth - 200) && (event.getY() < 200)) {
+                this.instructionMenu = true;
+                this.mainMenu = false;
+                return true;
+            }
+        } else if (instructionMenu){
+            if((event.getX() < (this.windowWidth / 3.0)) && (event.getY() < (this.windowHeight / 4.0))){
+                this.mainMenu = true;
+                this.instructionMenu = false;
+                return true;
+            }
         }
 
         return true;
+    }
+
+    private void drawMainMenu(Canvas canvas){
+        canvas.drawColor(this.bgColor);
+        this.mainLoop.draw(canvas);
+        canvas.drawBitmap(this.startEmblem, (float) (windowWidth / 2.0 - innerRadius),
+                (float) (windowHeight / 2.0 - innerRadius),
+                this.paint);
+        this.mainLoop.move(6);
+
+        paint.setTextSize(100.0f);
+        paint.setColor(this.loopColors.get(1));
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setFakeBoldText(true);
+        canvas.drawText("?", this.windowWidth - 70, 100, paint);
+    }
+
+    private void drawInstructionMenu(Canvas canvas){
+        canvas.drawColor(this.bgColor);
+        canvas.drawBitmap(this.instructionImg, 0, 0, this.paint);
+
     }
 }

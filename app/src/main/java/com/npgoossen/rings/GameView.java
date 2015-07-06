@@ -1,6 +1,7 @@
 package com.npgoossen.rings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -86,20 +87,6 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                 this.radius, this.innerRadius, this.bgColor);
 
         this.startGame();
-////        this.initLoopColors();
-//
-//        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
-//        mainLoop.addSegment(loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size())));
-//
-//        scoreChanged = false;
-//        gameOverColor = loopColors.get(Math.abs(randomGenerator.nextInt() % loopColors.size()));
-//
-//        this.curBall = new Ball((float)(radius/5.0), arcWedge.centerX(), arcWedge.centerY(),
-//                this.paint, getRandBallColor(),
-//                windowHeight, windowWidth);
-//
-//        gameSensorManager.registerListener(this, motionSensor,
-//                SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -118,25 +105,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             canvas.drawText(String.valueOf(score), this.windowWidth - 100, 100, this.paint);
             this.updateLoop();
         } else {
-            canvas.drawColor(this.bgColor);
-            mainLoop.draw(canvas);
-            this.curBall.draw(canvas);
-
-            canvas.drawARGB(200, 255, 250, 250);
-
-            paint.setColor(this.gameOverColor);
-            paint.setTextSize(100.0f);
-            paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("game over... :\'(", this.arcWedge.centerX(), 150, paint);
-
-            paint.setFakeBoldText(true);
-            paint.setTextSize(300.0f);
-            canvas.drawText(String.valueOf(finalScore), this.arcWedge.centerX(),
-                    this.arcWedge.centerY(), paint);
-
-            paint.setTextSize(100.0f);
-            canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
-                    paint);
+            this.drawGameOver(canvas);
         }
 
         invalidate();
@@ -146,7 +115,13 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         if(!gameOver){
             return true;
         } else {
-            this.resetGame();
+            if(event.getY() < (this.arcWedge.centerY() + 150.0) ) {
+                this.resetGame();
+            } else{
+                this.resetGame();
+                return true;
+            }
+
             return true;
         }
 
@@ -177,7 +152,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
         if(!collision) {
             if (this.colorMatched()) {
-                score += 1;
+                score++;
                 scoreChanged = true;
                 this.curBall.reset();
                 finalScore = score;
@@ -233,6 +208,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         loopColors.add(res.getColor(R.color.gamePink));
         loopColors.add(res.getColor(R.color.gamePurple));
         loopColors.add(res.getColor(R.color.gameYellow));
+        loopColors.add(res.getColor(R.color.gameGrey));
+        loopColors.add(res.getColor(R.color.gameBlack));
+        loopColors.add(res.getColor(R.color.gameTeal));
+        loopColors.add(res.getColor(R.color.gameBrown));
+        loopColors.add(res.getColor(R.color.gameBrightGreen));
     }
 
     private void resetGame(){
@@ -265,8 +245,6 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                 tmp++;
         }
 
-        System.out.println(mainLoop.toString());
-
         this.curBall = new Ball((float)(radius/5.0), arcWedge.centerX(), arcWedge.centerY(),
                 this.paint, getRandBallColor(),
                 windowHeight, windowWidth);
@@ -275,5 +253,27 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
         gameSensorManager.registerListener(this, motionSensor,
                 SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private void drawGameOver(Canvas canvas){
+        canvas.drawColor(this.bgColor);
+        mainLoop.draw(canvas);
+        this.curBall.draw(canvas);
+
+        canvas.drawARGB(200, 255, 250, 250);
+
+        paint.setColor(this.gameOverColor);
+        paint.setTextSize(100.0f);
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("game over... :\'(", this.arcWedge.centerX(), 150, paint);
+
+        paint.setFakeBoldText(true);
+        paint.setTextSize(300.0f);
+        canvas.drawText(String.valueOf(finalScore), this.arcWedge.centerX(),
+                this.arcWedge.centerY(), paint);
+
+        paint.setTextSize(100.0f);
+        canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
+                paint);
     }
 }
