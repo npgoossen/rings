@@ -43,4 +43,5 @@ public class GameActivity extends Activity{
         gameView.requestFocus();
 
     }
+
 }

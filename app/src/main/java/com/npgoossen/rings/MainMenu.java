@@ -31,6 +31,17 @@ public class MainMenu extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed(){
 
+        System.out.println("BACK BUTTONNN");
+        System.out.println(mainView.instructionMenu);
+
+
+        if(mainView.instructionMenu) {
+            mainView.instructionMenu = false;
+            mainView.invalidate();
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.npgoossen.rings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -55,6 +56,8 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
     private static final int originalLoopSpeed = 9;
     private static final float originalSensorMultiplier = 1.25f;
 
+    private boolean sensorSwitch;
+
     public GameView(Context context){
         super(context);
         setFocusable(true);
@@ -103,6 +106,12 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             paint.setTextSize(70.0f);
             paint.setFakeBoldText(true);
             canvas.drawText(String.valueOf(score), this.windowWidth - 100, 100, this.paint);
+
+            if(sensorSwitch) {
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Switch Incoming", this.arcWedge.centerX(), this.windowHeight - 100,
+                        this.paint);
+            }
             this.updateLoop();
         } else {
             this.drawGameOver(canvas);
@@ -118,7 +127,9 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             if(event.getY() < (this.arcWedge.centerY() + 150.0) ) {
                 this.resetGame();
             } else{
-                this.resetGame();
+                Intent mainIntent = new Intent(getContext(), MainMenu.class);
+                getContext().startActivity(mainIntent);
+                ((Activity) getContext()).finish();
                 return true;
             }
 
@@ -194,9 +205,14 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                 if(mainLoop.addSegment(getRandLoopColor()))
                     break;
             }
+            if(score % 35 == 0){
+                sensorMultiplier *= -1f;
+            }
             loopSpeed += 4;
             sensorMultiplier += 0.45;
             scoreChanged = false;
+        } else {
+            sensorSwitch = score % 34 == 0 && score != 0;
         }
     }
 
@@ -275,5 +291,9 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         paint.setTextSize(100.0f);
         canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
                 paint);
+
+        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 200,
+                paint);
+
     }
 }

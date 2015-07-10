@@ -1,5 +1,6 @@
 package com.npgoossen.rings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -40,7 +41,7 @@ public class MainMenuView extends View implements View.OnTouchListener {
     private float innerRadius;
 
     private boolean mainMenu;
-    private boolean instructionMenu;
+    public boolean instructionMenu;
 
     public MainMenuView(Context context){
         super(context);
@@ -107,6 +108,7 @@ public class MainMenuView extends View implements View.OnTouchListener {
             if(this.mainLoop.container.contains(event.getX(), event.getY())) {
                 Intent mainIntent = new Intent(getContext(), GameActivity.class);
                 getContext().startActivity(mainIntent);
+                ((Activity) getContext()).finish();
             } else if((event.getX() > this.windowWidth - 200) && (event.getY() < 200)) {
                 this.instructionMenu = true;
                 this.mainMenu = false;
@@ -143,4 +145,5 @@ public class MainMenuView extends View implements View.OnTouchListener {
         canvas.drawBitmap(this.instructionImg, 0, 0, this.paint);
 
     }
+
 }
