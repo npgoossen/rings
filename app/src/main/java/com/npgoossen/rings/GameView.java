@@ -3,6 +3,7 @@ package com.npgoossen.rings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -30,6 +31,8 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
     private static int score = 0;
     private static boolean gameOver = false;
     private static int finalScore;
+    private static boolean highScoreSet;
+    private static int highScore;
 
     public static List<Integer> loopColors = new ArrayList<>();
     private static Loop mainLoop;
@@ -254,6 +257,8 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         this.initLoopColors();
 
         scoreChanged = false;
+        gameOver = false;
+        highScoreSet = false;
 
         int tmp = 0;
         while(tmp < 2){
@@ -278,6 +283,21 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
         canvas.drawARGB(200, 255, 250, 250);
 
+        if(!highScoreSet){
+            SharedPreferences prefs = getContext().getSharedPreferences("highScore",
+                    Context.MODE_PRIVATE);
+            highScore = prefs.getInt("highScore", 0);
+
+            if(finalScore > highScore){
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("highScore", finalScore);
+                editor.commit();
+            }
+
+            highScoreSet = false;
+        }
+
+
         paint.setColor(this.gameOverColor);
         paint.setTextSize(100.0f);
         paint.setTextAlign(Paint.Align.CENTER);
@@ -292,7 +312,12 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
                 paint);
 
-        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 200,
+        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 100,
+                paint);
+
+        paint.setFakeBoldText(false);
+        paint.setTextSize(80.0f);
+        canvas.drawText("high score: " + String.valueOf(highScore), this.arcWedge.centerX(), this.arcWedge.centerY() + 250,
                 paint);
 
     }
