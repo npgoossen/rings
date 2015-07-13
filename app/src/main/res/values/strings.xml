@@ -5,6 +5,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_main_menu">MainMenu</string>
-
     <string name="title_activity_game">GameActivity</string>
+
+    <string name="bottom_banner_game">ca-app-pub-8777873179306055/9541762120</string>
 </resources>

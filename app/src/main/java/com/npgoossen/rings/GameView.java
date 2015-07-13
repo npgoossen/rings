@@ -61,6 +61,9 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
     private boolean sensorSwitch;
 
+    /*
+       Constructor for the game view
+     */
     public GameView(Context context){
         super(context);
         setFocusable(true);
@@ -117,6 +120,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             }
             this.updateLoop();
         } else {
+
             this.drawGameOver(canvas);
         }
 
@@ -127,9 +131,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         if(!gameOver){
             return true;
         } else {
-            if(event.getY() < (this.arcWedge.centerY() + 150.0) ) {
+            if(event.getY() < (this.windowHeight - 250) ) {
+                System.out.println("play again");
                 this.resetGame();
             } else{
+                this.resetGame();
                 Intent mainIntent = new Intent(getContext(), MainMenu.class);
                 getContext().startActivity(mainIntent);
                 ((Activity) getContext()).finish();
@@ -142,10 +148,15 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy){
+    public void onAccuracyChanged(Sensor sensor, int tmp){
 
     }
 
+    /*
+        Handles all the sensor changes.
+        moves the ball according to the velocity of the
+        accelerometers
+     */
     @Override
     public void onSensorChanged(SensorEvent event){
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !gameOver) {
@@ -156,6 +167,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         }
     }
 
+
+    /*
+        Checks for a collision in between the ball and the loop,
+        also checks if the color matches the ball and loop segment
+     */
     public boolean checkCollision(){
 
         float xDif = this.curBall.positionX - this.arcWedge.centerX();
@@ -219,6 +235,10 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         }
     }
 
+    /*
+        Adds a bunch of colors to the possible colors
+        for the loop and ball
+     */
     private void initLoopColors(){
         loopColors.add(res.getColor(R.color.gameGreen));
         loopColors.add(res.getColor(R.color.gameOrange));
@@ -291,7 +311,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             if(finalScore > highScore){
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("highScore", finalScore);
-                editor.commit();
+                editor.apply();
             }
 
             highScoreSet = false;
@@ -312,7 +332,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
                 paint);
 
-        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 100,
+        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 120,
                 paint);
 
         paint.setFakeBoldText(false);
