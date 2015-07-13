@@ -68,4 +68,9 @@ public class GameActivity extends Activity{
         super.onDestroy();
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
 }

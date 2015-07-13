@@ -279,6 +279,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         scoreChanged = false;
         gameOver = false;
         highScoreSet = false;
+        score = 0;
+        finalScore = 0;
+
+        sensorMultiplier = originalSensorMultiplier;
+        loopSpeed = originalLoopSpeed;
 
         int tmp = 0;
         while(tmp < 2){
@@ -341,4 +346,5 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
                 paint);
 
     }
+
 }
