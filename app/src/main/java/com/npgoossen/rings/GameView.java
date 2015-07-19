@@ -226,12 +226,25 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             }
             if(score % 35 == 0){
                 sensorMultiplier *= -1f;
+                this.resetLoopTo(2);
+                this.curBall.reset();
             }
             loopSpeed += 4;
             sensorMultiplier += 0.45;
             scoreChanged = false;
         } else {
             sensorSwitch = score % 34 == 0 && score != 0;
+        }
+    }
+
+    public void resetLoopTo(int numSegments){
+        mainLoop.clearLoop();
+
+        int tmp = 0;
+
+        while(tmp < numSegments){
+            if( mainLoop.addSegment(getRandLoopColor()))
+                tmp++;
         }
     }
 
