@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -100,6 +101,8 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
     @Override
     public void onDraw(Canvas canvas){
+        paint.setTypeface(Typeface.SANS_SERIF);
+        paint.setFakeBoldText(false);
         if(!gameOver) {
             canvas.drawColor(this.bgColor);
             mainLoop.draw(canvas);
@@ -110,7 +113,6 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
 
             paint.setColor(loopColors.get(0));
             paint.setTextSize(70.0f);
-            paint.setFakeBoldText(true);
             canvas.drawText(String.valueOf(score), this.windowWidth - 100, 100, this.paint);
 
             if(sensorSwitch) {
@@ -131,8 +133,7 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         if(!gameOver){
             return true;
         } else {
-            if(event.getY() < (this.windowHeight - 250) ) {
-                System.out.println("play again");
+            if(event.getY() < (this.windowHeight * 3.0f/4.0f) ) {
                 this.resetGame();
             } else{
                 this.resetGame();
@@ -195,18 +196,27 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         return true;
     }
 
+    /*
+        Generates a random color for the next game ball.
+     */
     public static int getRandBallColor(){
         int tmpIndex = Math.abs(randomGenerator.nextInt() % mainLoop.segments.size());
 
         return mainLoop.segments.get(tmpIndex).color;
     }
 
+    /*
+        Generates a random color from the "loopcolors" list for the main loop
+     */
     public static int getRandLoopColor(){
         int tmpIndex = Math.abs(randomGenerator.nextInt() % loopColors.size());
 
         return loopColors.get(tmpIndex);
     }
 
+    /*
+        Checks if the color of the ball matches the color of the loop color that it touches
+     */
     protected boolean colorMatched(){
         for(LoopSegment tmpSeg : mainLoop.segments){
             if(tmpSeg.containsPoint(this.curBall.positionX, this.curBall.positionY)){
@@ -335,13 +345,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
             highScoreSet = false;
         }
 
-
         paint.setColor(this.gameOverColor);
         paint.setTextSize(100.0f);
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText("game over... :\'(", this.arcWedge.centerX(), 150, paint);
 
-        paint.setFakeBoldText(true);
         paint.setTextSize(300.0f);
         canvas.drawText(String.valueOf(finalScore), this.arcWedge.centerX(),
                 this.arcWedge.centerY(), paint);
@@ -350,12 +358,11 @@ public class GameView extends View implements View.OnTouchListener, SensorEventL
         canvas.drawText("play again?", this.arcWedge.centerX(), this.arcWedge.centerY() + 150,
                 paint);
 
-        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight - 120,
-                paint);
-
-        paint.setFakeBoldText(false);
         paint.setTextSize(80.0f);
         canvas.drawText("high score: " + String.valueOf(highScore), this.arcWedge.centerX(), this.arcWedge.centerY() + 250,
+                paint);
+
+        canvas.drawText("main menu", this.arcWedge.centerX(), this.windowHeight * 3.0f/4.0f + 120,
                 paint);
 
     }

@@ -42,6 +42,8 @@ public class GameActivity extends Activity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+
+
         gameView = new GameView(this);
 
         adView = new AdView(this);

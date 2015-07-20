@@ -136,7 +136,6 @@ public class MainMenuView extends View implements View.OnTouchListener {
         paint.setTextSize(100.0f);
         paint.setColor(this.loopColors.get(1));
         paint.setTextAlign(Paint.Align.CENTER);
-        paint.setFakeBoldText(true);
         canvas.drawText("?", this.windowWidth - 70, 100, paint);
     }
 
